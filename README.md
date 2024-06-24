@@ -14,6 +14,15 @@ This plugin consist of the following licenses:
 - BSD-4 C++ Business logic headers for the CuraEngine plugin logic
 - AGPLv3 C++ Infill generation header
 
+System Requirements
+Windows
+    Python 3.10 or higher
+    Ninja 1.10 or higher
+    VS2022 & < 17.10 (17.3.3 works)
+    CMake 3.23 or higher
+    nmake
+
+
 ## Installation
 
 1. Configure Conan
@@ -31,9 +40,14 @@ https://github.com/Ultimaker/CuraEngine_plugin_infill_generate.git
 cd CuraEngine_plugin_infill_generate
 ```
 
-3. Install & Build CuraEngine (Release OR Debug)
+3. Install & Build CuraEngine (Release)
 ```bash
-conan install . --build=missing --update -s build_type=Debug/Release
+conan install . --build=missing --update -s build_type=Release
+```
+
+4. Build files
+```bash
+conan build .
 ```
 
 [For more info](https://github.com/Ultimaker/CuraEngine/wiki/Building-CuraEngine-From-Source)
