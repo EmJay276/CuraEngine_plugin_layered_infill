@@ -73,11 +73,12 @@ public:
         folder_path += pattern;
 
         //path used later in the plugin for the current layer file
-        auto content_path = folder_path;
+        auto content_path = tiles_path;
 
 
         if (std::filesystem::is_directory(folder_path)) { //if a directory with the same name as the pattern exists
 
+            content_path = folder_path;
             // the information which layer is next is saved in a .txt file
             std::string prefix;
             std::string ext(".txt");
@@ -102,6 +103,8 @@ public:
             content_path += "_";
             content_path += pattern;
             content_path += ".wkt";
+
+            spdlog::info(prefix);
 
             // decrease current layer number by 1
             int prefix_size = prefix.length();
@@ -128,6 +131,8 @@ public:
 
             //rename layer selection file
             std::filesystem::rename(prefixfile_path, nextlayer_path);
+        } else {
+            content_path.append(fmt::format("{}.wkt", pattern));
         }
 
         size_t row_count{ 0 };
