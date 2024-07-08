@@ -82,24 +82,28 @@ struct Generate
             const auto tile_type_setting = Settings::retrieveSettings("tile_shape", request, metadata);
             const auto tile_size_setting = Settings::retrieveSettings("tile_size", request, metadata);
             const auto absolute_tiles_setting = Settings::retrieveSettings("absolute_tiles", request, metadata);
+            const auto z_setting = Settings::retrieveZ(request);
 
-            if (! pattern_setting.has_value() || ! tile_type_setting.has_value() || ! tile_size_setting.has_value() || ! absolute_tiles_setting.has_value())
+            if (! pattern_setting.has_value() || ! tile_type_setting.has_value()
+             || ! tile_size_setting.has_value() || ! absolute_tiles_setting.has_value() || ! z_setting.has_value())
             {
                 spdlog::error(
-                    "pattern: {}, tile_shape: {}, tile size: {}, absolute tiles: {}",
+                    "pattern: {}, tile_shape: {}, tile size: {}, absolute tiles: {}, z: {}",
                     pattern_setting.has_value(),
                     tile_type_setting.has_value(),
                     tile_size_setting.has_value(),
-                    absolute_tiles_setting.has_value());
+                    absolute_tiles_setting.has_value(),
+                    z_setting.has_value());
                 spdlog::error(request.DebugString());
                 status = grpc::Status(
                     grpc::StatusCode::INTERNAL,
                     fmt::format(
-                        "Plugin could not retrieve settings! pattern: {}, tile_shape: {}, tile size: {}, absolute tiles: {}",
+                        "Plugin could not retrieve settings! pattern: {}, tile_shape: {}, tile size: {}, absolute tiles: {}, z: {}",
                         pattern_setting.has_value(),
                         tile_type_setting.has_value(),
                         tile_size_setting.has_value(),
-                        absolute_tiles_setting.has_value()));
+                        absolute_tiles_setting.has_value(),
+                        z_setting.has_value()));
             }
 
             if (! status.ok())
@@ -111,6 +115,7 @@ struct Generate
             const infill::TileType tile_type = Settings::getTileType(tile_type_setting.value());
             const int64_t tile_size = std::stoll(tile_size_setting.value()) * 1000;
             const bool absolute_tiles = absolute_tiles_setting.value() == "True" || absolute_tiles_setting.value() == "true";
+            const int64_t z = std::stoll(z_setting.value());
             auto client_metadata = getUuid(server_context);
 
             auto outlines = std::vector<infill::geometry::polygon_outer<>>{};
@@ -139,7 +144,7 @@ struct Generate
             ClipperLib::Paths polys;
             try
             {
-                auto [lines_, polys_] = generator.generate(outlines, pattern_setting.value(), tile_size, absolute_tiles, tile_type);
+                auto [lines_, polys_] = generator.generate(outlines, pattern_setting.value(), tile_size, absolute_tiles, tile_type, z);
                 lines = std::move(lines_);
                 polys = std::move(polys_);
             }

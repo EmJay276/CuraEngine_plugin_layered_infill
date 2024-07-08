@@ -63,6 +63,15 @@ struct Settings
         line_distance = std::stoll(global_settings.at("infill_line_distance"));
     }
 
+    static std::optional<std::string> retrieveZ(const auto& request)
+    {
+        if (request.settings().settings().contains("z"))
+        {
+            return request.settings().settings().at("z");
+        }
+
+        return std::nullopt;
+    }
 
     static std::optional<std::string_view> getPattern(std::string_view pattern, std::string_view plugin_name, std::string_view plugin_version)
     {

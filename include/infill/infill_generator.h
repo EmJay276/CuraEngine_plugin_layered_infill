@@ -46,7 +46,8 @@ public:
         std::string_view pattern,
         const int64_t tile_size,
         const bool absolute_tiles,
-        const TileType tile_type)
+        const TileType tile_type,
+        const int64_t z)
     {
         auto bounding_boxes = outer_contours
                             | ranges::views::transform(
@@ -64,6 +65,10 @@ public:
         {
             return tile_type == TileType::HEXAGON ? static_cast<int64_t>(row_idx % 2 * width_offset / 2) : 0;
         };
+        // ------------------------------------------------------------
+        // Current z height
+        // ------------------------------------------------------------
+        spdlog::info("Received z: {}", static_cast<int64_t>(z));
 
         std::vector<std::vector<Tile>> grid;
 
@@ -75,63 +80,21 @@ public:
         //path used later in the plugin for the current layer file
         auto content_path = tiles_path;
 
-
         if (std::filesystem::is_directory(folder_path)) { //if a directory with the same name as the pattern exists
+            auto layer_name = "/" + std::to_string(z) + "_";
+            layer_name += pattern;
+            layer_name += ".wkt";
 
             content_path = folder_path;
-            // the information which layer is next is saved in a .txt file
-            std::string prefix;
-            std::string ext(".txt");
-            std::filesystem::path prefixfile_path;
+            content_path += layer_name;
 
-            int highest_file = -2; //highest file number, starts from 0 -txt fil
-
-            std::filesystem::directory_iterator iter{folder_path}; //to iterate over every file in the directory
-
-            for (auto &p : iter) {
-                highest_file += 1;
-                //if .txt file save filename and path
-                if (p.path().extension() == ext) {
-                    prefix = p.path().stem().string();
-                    prefixfile_path = p.path();
-                }
+            if(std::filesystem::exists(content_path)){ //if a file for the current layer exists
+                spdlog::info(layer_name);
+            } else { //no file exists, slicing will fail with the error message
+                spdlog::error("No file found for z height: {}", static_cast<int64_t>(z));
             }
-
-            //path for the next layer
-            content_path += "/";
-            content_path += prefix;
-            content_path += "_";
-            content_path += pattern;
-            content_path += ".wkt";
-
-            spdlog::info(prefix);
-
-            // decrease current layer number by 1
-            int prefix_size = prefix.length();
-            int prefix_temp = std::stoi(prefix);
-            prefix_temp -= 1;
-
-            // if arrived at first file, set to last
-            if (prefix_temp == -1){
-                prefix_temp = highest_file;
-            }
-
-            prefix = std::to_string(prefix_temp);
-
-            //add zeros at the beginning of the string until the length matches prefix_size
-            while (prefix.length() != prefix_size) {
-                prefix.insert(0, "0");
-            }
-
-            //path to copy the next layer
-            auto nextlayer_path = folder_path;
-            nextlayer_path += "/";
-            nextlayer_path += prefix;
-            nextlayer_path += ext;
-
-            //rename layer selection file
-            std::filesystem::rename(prefixfile_path, nextlayer_path);
-        } else {
+        } else { // no directory with .wkt files exists for current infill
+            spdlog::info("No .wkt folder found for current infill. Resuming with regular infill generation.");
             content_path.append(fmt::format("{}.wkt", pattern));
         }
 

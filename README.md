@@ -36,7 +36,7 @@ conan profile new default --detect --force
 ```
 2. Clone CuraEngine_plugin_infill_generate
 ```bash
-https://github.com/Ultimaker/CuraEngine_plugin_infill_generate.git
+git clone https://github.com/Ultimaker/CuraEngine_plugin_infill_generate.git CuraEngine_plugin_infill_generate
 cd CuraEngine_plugin_infill_generate
 ```
 
@@ -45,7 +45,7 @@ cd CuraEngine_plugin_infill_generate
 conan install . --build=missing --update -s build_type=Release
 ```
 
-4. Build files
+4. Build executable
 ```bash
 conan build .
 ```
