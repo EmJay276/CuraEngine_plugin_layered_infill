@@ -43,6 +43,26 @@
         "default_value": true,
         "settable_per_mesh": true,
         "enabled": "infill_pattern.startswith(\"PLUGIN::CuraEngineTiledInfill\")"
+      },
+      "center_x": {
+        "label": "Center Distance X",
+        "description": "Distance to center in x direction.",
+        "unit": "mm",
+        "type": "float",
+        "value": "0.0",
+
+        "settable_per_mesh": true,
+        "enabled": "infill_pattern.startswith(\"PLUGIN::CuraEngineTiledInfill\")"
+      },
+      "center_y": {
+        "label": "Center Distance Y",
+        "description": "Distance to center in y direction.",
+        "unit": "mm",
+        "type": "float",
+        "value": "0.0",
+
+        "settable_per_mesh": true,
+        "enabled": "infill_pattern.startswith(\"PLUGIN::CuraEngineTiledInfill\")"
       }
     }
   }

@@ -32,6 +32,7 @@ pattern_wkt = "shapely_test"
 tiles_path = 'C:Users\Marie\AppData\Roaming\cura\\5.7\plugins\CuraEngineTiledInfill\CuraEngineTiledInfill\\tiles'  # ToDo flexibeler pfad
 dir_path = tiles_path + '\\' + pattern_wkt
 file_path = tiles_path + '\\' + pattern_wkt + '.wkt'
+
 print(dir_path)
 
 if not os.path.exists(dir_path):

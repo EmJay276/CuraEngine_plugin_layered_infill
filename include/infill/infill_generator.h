@@ -47,6 +47,8 @@ public:
         const int64_t tile_size,
         const bool absolute_tiles,
         const TileType tile_type,
+        const int64_t center_x,
+        const int64_t center_y,
         const int64_t z)
     {
         auto bounding_boxes = outer_contours
@@ -59,8 +61,8 @@ public:
         auto bounding_box = geometry::computeBoundingBox(bounding_boxes);
 
         constexpr int64_t line_width = 200;
-        auto width_offset = tile_type == TileType::HEXAGON ? static_cast<int64_t>(std::sqrt(3) * tile_size + line_width) :tile_size;
-        auto height_offset = tile_type == TileType::HEXAGON ? 3 * tile_size / 2 + line_width : tile_size;
+        auto width_offset = tile_size;
+        auto height_offset = tile_size;
         auto alternating_row_offset = [width_offset, tile_type](const auto row_idx)
         {
             return tile_type == TileType::HEXAGON ? static_cast<int64_t>(row_idx % 2 * width_offset / 2) : 0;
@@ -69,6 +71,8 @@ public:
         // Current z height
         // ------------------------------------------------------------
         spdlog::info("Received z: {}", static_cast<int64_t>(z));
+        spdlog::info("Received Center Distance x: {}", center_x);
+        spdlog::info("Received Center Distance y: {}", center_y);
 
         std::vector<std::vector<Tile>> grid;
 
@@ -89,29 +93,74 @@ public:
             content_path += layer_name;
 
             if(std::filesystem::exists(content_path)){ //if a file for the current layer exists
-                spdlog::info(layer_name);
-            } else { //no file exists, slicing will fail with the error message
-                spdlog::error("No file found for z height: {}", static_cast<int64_t>(z));
+                spdlog::info("File used for current layer: {}", layer_name);
+            } else { //no file exists, next higher file will be used error message
+                std::filesystem::directory_iterator iter{folder_path};
+                std::filesystem::path cur_path;
+                std::string layer_prefix = "";
+                std::vector<int> all_file_pre;
+
+                for (auto const &dir_entry: iter) {
+                    cur_path= iter->path();
+                    auto filename = cur_path.filename().string();
+                    auto prefix = std::stoi(filename.substr(0, filename.find("_")));
+
+                    all_file_pre.push_back(prefix);
+                }
+
+                std::sort(all_file_pre.begin(),all_file_pre.end());
+                for(auto i=all_file_pre.begin(); i<all_file_pre.end(); i++){
+                    if(*i > z){
+                        layer_prefix = std::to_string(*i);
+                        break;
+                    }
+	            }
+	            if (layer_prefix == ""){
+                    layer_prefix = std::to_string(all_file_pre.back());
+                }
+
+                layer_name = "/" + layer_prefix + "_";
+                layer_name += pattern;
+                layer_name += ".wkt";
+
+                content_path = folder_path;
+                content_path += layer_name;
+
+                spdlog::info("No file for z height {} exists, file used for current layer: {}", z, layer_name);
+
             }
+
         } else { // no directory with .wkt files exists for current infill
             spdlog::info("No .wkt folder found for current infill. Resuming with regular infill generation.");
             content_path.append(fmt::format("{}.wkt", pattern));
         }
 
         size_t row_count{ 0 };
-        auto start_y = absolute_tiles ? (bounding_box.at(0).Y / height_offset) * height_offset : bounding_box.at(0).Y - height_offset;
-        auto start_x = absolute_tiles ? (bounding_box.at(0).X / width_offset) * width_offset : bounding_box.at(0).X - width_offset;
+        //auto start_y = bounding_box.at(0).Y; //absolute_tiles ? (bounding_box.at(0).Y / height_offset) * height_offset : bounding_box.at(0).Y - height_offset;
+        //auto start_x = bounding_box.at(0).X; //absolute_tiles ? (bounding_box.at(0).X / width_offset) * width_offset : bounding_box.at(0).X - width_offset;
+        spdlog::info("Bounding Box at 0 y: {}", bounding_box.at(0).Y);
+        spdlog::info("Bounding Box at 0 x: {}", bounding_box.at(0).X);
+        spdlog::info("Bounding Box at 1 y: {}", bounding_box.at(1).Y);
+        spdlog::info("Bounding Box at 1 x: {}", bounding_box.at(1).X);
+
+        /*
         for (auto y = start_y; y < bounding_box.at(1).Y + height_offset; y += height_offset)
         {
             std::vector<Tile> row;
             for (auto x = start_x + alternating_row_offset(row_count); x < bounding_box.at(1).X + width_offset; x += width_offset)
             {
                 row.push_back({ .x = x, .y = y, .filepath = content_path, .magnitude = tile_size, .tile_type = tile_type });
+                spdlog::info("x: {}", x);
+                spdlog::info("y: {}", y);
             }
             grid.push_back(row);
             row_count++;
         }
+        */
 
+        std::vector<Tile> row;
+        row.push_back({ .x = 90000, .y = 90000, .filepath = content_path, .magnitude = tile_size, .tile_type = tile_type });
+        grid.push_back(row);
         // Cut the grid with the outer contour using Clipper
         auto [lines, polys] = gridToPolygon(grid);
         return { geometry::clip(lines, false, outer_contours), geometry::clip(polys, true, outer_contours) };
