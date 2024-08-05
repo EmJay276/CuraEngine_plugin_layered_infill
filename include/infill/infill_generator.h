@@ -159,7 +159,7 @@ public:
         */
 
         std::vector<Tile> row;
-        row.push_back({ .x = 90000, .y = 90000, .filepath = content_path, .magnitude = tile_size, .tile_type = tile_type });
+        row.push_back({ .x = 1000 * center_x, .y = 1000 * center_y, .filepath = content_path, .magnitude = tile_size, .tile_type = tile_type });
         grid.push_back(row);
         // Cut the grid with the outer contour using Clipper
         auto [lines, polys] = gridToPolygon(grid);

@@ -85,30 +85,35 @@ struct Generate
             const auto center_x_setting = Settings::retrieveSettings("center_x", request, metadata);
             const auto center_y_setting = Settings::retrieveSettings("center_y", request, metadata);
             const auto z_setting = Settings::retrieveZ(request);
+            const auto [machine_width, machine_depth] = Settings::machineSize(request);
 
             if (! pattern_setting.has_value() || ! tile_type_setting.has_value()
              || ! tile_size_setting.has_value() || ! absolute_tiles_setting.has_value() || ! center_x_setting.has_value() || ! center_y_setting.has_value() || ! z_setting.has_value())
             {
                 spdlog::error(
-                    "pattern: {}, tile_shape: {}, tile size: {}, absolute tiles: {}, center distance x: {}, center distance y: {}, z: {}",
+                    "pattern: {}, tile_shape: {}, tile size: {}, absolute tiles: {}, center distance x: {}, center distance y: {}, machine width: {}, machine depth: {}, z: {}",
                     pattern_setting.has_value(),
                     tile_type_setting.has_value(),
                     tile_size_setting.has_value(),
                     absolute_tiles_setting.has_value(),
                     center_x_setting.has_value(),
                     center_y_setting.has_value(),
+                    machine_width.has_value(),
+                    machine_depth.has_value(),
                     z_setting.has_value());
                 spdlog::error(request.DebugString());
                 status = grpc::Status(
                     grpc::StatusCode::INTERNAL,
                     fmt::format(
-                        "Plugin could not retrieve settings! pattern: {}, tile_shape: {}, tile size: {}, absolute tiles: {}, z: {}, center distance x: {}, center distance y: {}",
+                        "Plugin could not retrieve settings! pattern: {}, tile_shape: {}, tile size: {}, absolute tiles: {}, center distance x: {}, center distance y: {}, machine width: {}, machine depth: {}, z: {}",
                         pattern_setting.has_value(),
                         tile_type_setting.has_value(),
                         tile_size_setting.has_value(),
                         absolute_tiles_setting.has_value(),
                         center_x_setting.has_value(),
                         center_y_setting.has_value(),
+                        machine_width.has_value(),
+                        machine_depth.has_value(),
                         z_setting.has_value()));
             }
 
@@ -121,8 +126,8 @@ struct Generate
             const infill::TileType tile_type = Settings::getTileType(tile_type_setting.value());
             const int64_t tile_size = std::stoll(tile_size_setting.value()) * 1000;
             const bool absolute_tiles = absolute_tiles_setting.value() == "True" || absolute_tiles_setting.value() == "true";
-            const int64_t center_x = std::stoll(center_x_setting.value());
-            const int64_t center_y = std::stoll(center_y_setting.value());
+            const int64_t center_x = std::stoll(machine_width.value()) / 2 + std::stoll(center_x_setting.value());
+            const int64_t center_y = std::stoll(machine_depth.value()) / 2 - std::stoll(center_y_setting.value());
             const int64_t z = std::stoll(z_setting.value());
             auto client_metadata = getUuid(server_context);
 

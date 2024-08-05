@@ -65,13 +65,24 @@ struct Settings
 
     static std::optional<std::string> retrieveZ(const auto& request)
     {
-        if (request.settings().settings().contains("z"))
+        auto settings = request.settings().settings();
+        if (settings.contains("z"))
         {
-            return request.settings().settings().at("z");
+            return settings.at("z");
         }
-
         return std::nullopt;
     }
+
+    static std::tuple<std::optional<std::string>, std::optional<std::string>> machineSize(const auto& request)
+    {
+        auto settings = request.settings().settings();
+        if (settings.contains("machine_width") && settings.contains("machine_depth"))
+        {
+            return std::make_tuple(settings.at("machine_width"), settings.at("machine_depth"));
+        }
+        return std::make_tuple(std::nullopt, std::nullopt);;
+    }
+
 
     static std::optional<std::string_view> getPattern(std::string_view pattern, std::string_view plugin_name, std::string_view plugin_version)
     {

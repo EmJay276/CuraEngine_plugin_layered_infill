@@ -92,7 +92,7 @@ private:
 
         // Center and scale the content in the tile.
         auto center = geometry::computeCoG(bb);
-        auto scale_factor = 2 * magnitude / std::max(bb.at(1).X - bb.at(0).X, bb.at(1).Y - bb.at(0).Y);
+        auto scale_factor =  1; // TODO replace by scaling factor from settings // magnitude / std::max(bb.at(1).X - bb.at(0).X, bb.at(1).Y - bb.at(0).Y);
         for (auto& line : std::get<0>(content))
         {
             for (auto& point : line)
