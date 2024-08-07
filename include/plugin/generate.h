@@ -126,8 +126,8 @@ struct Generate
             const infill::TileType tile_type = Settings::getTileType(tile_type_setting.value());
             const int64_t tile_size = std::stoll(tile_size_setting.value()) * 1000;
             const bool absolute_tiles = absolute_tiles_setting.value() == "True" || absolute_tiles_setting.value() == "true";
-            const int64_t center_x = std::stoll(machine_width.value()) / 2 + std::stoll(center_x_setting.value());
-            const int64_t center_y = std::stoll(machine_depth.value()) / 2 - std::stoll(center_y_setting.value());
+            const int64_t center_x = (long long) (1000.0 * (std::stold(machine_width.value()) / 2.0 + std::stold(center_x_setting.value())));
+            const int64_t center_y = (long long) (1000.0 * (std::stold(machine_depth.value()) / 2.0 - std::stold(center_y_setting.value())));
             const int64_t z = std::stoll(z_setting.value());
             auto client_metadata = getUuid(server_context);
 
