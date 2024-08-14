@@ -79,23 +79,18 @@ struct Generate
             grpc::ServerAsyncResponseWriter<Rsp> writer{ &server_context };
             co_await agrpc::request(&T::RequestCall, *generate_service, server_context, request, writer, boost::asio::use_awaitable);
             const auto pattern_setting = Settings::getPattern(request.pattern(), metadata->plugin_name, metadata->plugin_version);
-            const auto tile_type_setting = Settings::retrieveSettings("tile_shape", request, metadata);
-            const auto tile_size_setting = Settings::retrieveSettings("tile_size", request, metadata);
-            const auto absolute_tiles_setting = Settings::retrieveSettings("absolute_tiles", request, metadata);
+            const auto infill_scale_setting = Settings::retrieveSettings("infill_scale", request, metadata);
             const auto center_x_setting = Settings::retrieveSettings("center_x", request, metadata);
             const auto center_y_setting = Settings::retrieveSettings("center_y", request, metadata);
             const auto z_setting = Settings::retrieveZ(request);
             const auto [machine_width, machine_depth] = Settings::machineSize(request);
 
-            if (! pattern_setting.has_value() || ! tile_type_setting.has_value()
-             || ! tile_size_setting.has_value() || ! absolute_tiles_setting.has_value() || ! center_x_setting.has_value() || ! center_y_setting.has_value() || ! z_setting.has_value())
+            if (! pattern_setting.has_value() || ! infill_scale_setting.has_value() || ! center_x_setting.has_value() || ! center_y_setting.has_value() || ! machine_width.has_value() || ! machine_depth.has_value() || ! z_setting.has_value())
             {
                 spdlog::error(
-                    "pattern: {}, tile_shape: {}, tile size: {}, absolute tiles: {}, center distance x: {}, center distance y: {}, machine width: {}, machine depth: {}, z: {}",
+                    "pattern: {}, infill scale: {}, center distance x: {}, center distance y: {}, machine width: {}, machine depth: {}, z: {}",
                     pattern_setting.has_value(),
-                    tile_type_setting.has_value(),
-                    tile_size_setting.has_value(),
-                    absolute_tiles_setting.has_value(),
+                    infill_scale_setting.has_value(),
                     center_x_setting.has_value(),
                     center_y_setting.has_value(),
                     machine_width.has_value(),
@@ -105,11 +100,9 @@ struct Generate
                 status = grpc::Status(
                     grpc::StatusCode::INTERNAL,
                     fmt::format(
-                        "Plugin could not retrieve settings! pattern: {}, tile_shape: {}, tile size: {}, absolute tiles: {}, center distance x: {}, center distance y: {}, machine width: {}, machine depth: {}, z: {}",
+                        "Plugin could not retrieve settings! pattern: {}, infill scale: {}, center distance x: {}, center distance y: {}, machine width: {}, machine depth: {}, z: {}",
                         pattern_setting.has_value(),
-                        tile_type_setting.has_value(),
-                        tile_size_setting.has_value(),
-                        absolute_tiles_setting.has_value(),
+                        infill_scale_setting.has_value(),
                         center_x_setting.has_value(),
                         center_y_setting.has_value(),
                         machine_width.has_value(),
@@ -123,9 +116,8 @@ struct Generate
                 continue;
             }
 
-            const infill::TileType tile_type = Settings::getTileType(tile_type_setting.value());
-            const int64_t tile_size = std::stoll(tile_size_setting.value()) * 1000;
-            const bool absolute_tiles = absolute_tiles_setting.value() == "True" || absolute_tiles_setting.value() == "true";
+            spdlog::info("scale: {}", infill_scale_setting.value());
+            const int64_t infill_scale = std::stoi(infill_scale_setting.value());
             const int64_t center_x = (long long) (1000.0 * (std::stold(machine_width.value()) / 2.0 + std::stold(center_x_setting.value())));
             const int64_t center_y = (long long) (1000.0 * (std::stold(machine_depth.value()) / 2.0 - std::stold(center_y_setting.value())));
             const int64_t z = std::stoll(z_setting.value());
@@ -157,7 +149,7 @@ struct Generate
             ClipperLib::Paths polys;
             try
             {
-                auto [lines_, polys_] = generator.generate(outlines, pattern_setting.value(), tile_size, absolute_tiles, tile_type, center_x, center_y, z);
+                auto [lines_, polys_] = generator.generate(outlines, pattern_setting.value(), infill_scale, center_x, center_y, z);
                 lines = std::move(lines_);
                 polys = std::move(polys_);
             }

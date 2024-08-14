@@ -115,7 +115,7 @@ jobs:
         with:
           name: windows-cura-plugin
           path: |
-            plugin_inst/CuraEngineTiledInfill/**/*
+            plugin_inst/CuraEngineLayeredInfill/**/*
           retention-days: 5
 
       # NOTE: The extension is .sh, since this isn't going to build-environment, so not on the Win build image.

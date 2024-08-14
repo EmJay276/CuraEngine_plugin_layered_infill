@@ -36,7 +36,6 @@
 #define PLUGIN_SETTINGS_H
 
 #include "cura/plugins/slots/broadcast/v0/broadcast.grpc.pb.h"
-#include "infill/tile_type.h"
 
 #include <semver.hpp>
 
@@ -92,19 +91,6 @@ struct Settings
             return pattern.substr(last_pos + 2);
         }
         return std::nullopt;
-    }
-
-    static constexpr infill::TileType getTileType(std::string_view tile_type)
-    {
-        if (tile_type == "square")
-        {
-            return infill::TileType::SQUARE;
-        }
-        if (tile_type == "hexagon")
-        {
-            return infill::TileType::HEXAGON;
-        }
-        return infill::TileType::NONE;
     }
 
 

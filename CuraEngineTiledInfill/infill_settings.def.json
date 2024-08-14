@@ -1,68 +1,36 @@
 {
   "infill": {
     "children": {
-      "tile_shape": {
-        "label": "Tile Shape",
-        "description": "The shape of the tiles.",
-        "type": "enum",
-        "options": {
-          "square": "Square",
-          "hexagon": "Hexagon"
-        },
-        "default_value": "'hexagon'",
-        "value": "'hexagon'",
-        "enabled": "infill_pattern.startswith(\"PLUGIN::CuraEngineTiledInfill\")",
-        "limit_to_extruder": "infill_extruder_nr",
-        "settable_per_mesh": true
-      },
-      "maximum_size": {
-        "label": "Maximum Tile Size",
-        "description": "gives max size of the tile that could be placed without overlapping",
-        "type": "float",
-        "value": "5 if infill_pattern.endswith(\"::cont_honeycomb\") else (20 if infill_pattern.endswith(\"::fill\") else 10)",
-        "enabled": false
-      },
-
-      "tile_size": {
-        "label": "Tile Size",
-        "description": "Size of the tiles. \n If changed will affect the infill density of the object",
-        "unit": "mm",
-        "type": "float",
-        "minimum_value": "1.0",
-        "maximum_value_warning": "250.0",
-        "maximum_value": "500.0",
-        "value": "500 if infill_sparse_density == 0 else ((100-infill_sparse_density) * maximum_size + infill_sparse_density)/100",
+      "infill_scale": {
+        "label": "Infill Scale",
+        "description": "Size of the Infill in percent",
+        "unit": "%",
+        "type": "int",
+        "minimum_value": "0",
+        "value": "100",
 
         "settable_per_mesh": true,
-        "enabled": "infill_pattern.startswith(\"PLUGIN::CuraEngineTiledInfill\")"
-      },
-      "absolute_tiles": {
-        "label": "Absolute Tile Coordinates",
-        "description": "Fix the tile coordinates to the absolute position of the buildplate.",
-        "type": "bool",
-        "default_value": true,
-        "settable_per_mesh": true,
-        "enabled": "infill_pattern.startswith(\"PLUGIN::CuraEngineTiledInfill\")"
+        "enabled": "infill_pattern.startswith(\"PLUGIN::CuraEngineLayeredInfill\")"
       },
       "center_x": {
-        "label": "Center Distance X",
-        "description": "Distance to center in x direction.",
+        "label": "Infill Center X",
+        "description": "Distance between build plate center and Infill Center in x coordinate.",
         "unit": "mm",
         "type": "float",
         "value": "0.0",
 
         "settable_per_mesh": true,
-        "enabled": "infill_pattern.startswith(\"PLUGIN::CuraEngineTiledInfill\")"
+        "enabled": "infill_pattern.startswith(\"PLUGIN::CuraEngineLayeredInfill\")"
       },
       "center_y": {
-        "label": "Center Distance Y",
-        "description": "Distance to center in y direction.",
+        "label": "Infill Center Y",
+        "description": "Distance between build plate center and Infill Center in y coordinate.",
         "unit": "mm",
         "type": "float",
         "value": "0.0",
 
         "settable_per_mesh": true,
-        "enabled": "infill_pattern.startswith(\"PLUGIN::CuraEngineTiledInfill\")"
+        "enabled": "infill_pattern.startswith(\"PLUGIN::CuraEngineLayeredInfill\")"
       }
     }
   }

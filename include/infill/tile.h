@@ -1,13 +1,9 @@
 // Copyright (c) 2023 UltiMaker
 // curaengine_plugin_generate_infill is released under the terms of the AGPLv3 or higher
 
-#ifndef INFILL_TILE_H
-#define INFILL_TILE_H
-
 #include "infill/content_reader.h"
 #include "infill/geometry.h"
 #include "infill/point_container.h"
-#include "infill/tile_type.h"
 
 #include <fmt/ranges.h>
 #include <range/v3/all.hpp>
@@ -28,9 +24,7 @@ public:
     int64_t x{ 0 };
     int64_t y{ 0 };
     std::filesystem::path filepath{};
-    int64_t magnitude{ 1000 };
-
-    TileType tile_type{ TileType::HEXAGON };
+    int64_t magnitude{ 1 };
 
     value_type render(const bool contour) const noexcept
     {
@@ -43,32 +37,10 @@ private:
     geometry::polygon_outer<ClipperLib::IntPoint> tileContour() const noexcept
     {
         using coord_t = decltype(x);
-        switch (tile_type)
-        {
-        case TileType::SQUARE:
-            return geometry::polygon_outer{ { x + static_cast<coord_t>(magnitude / -2), y + static_cast<coord_t>(magnitude / -2) },
-                                            { x + static_cast<coord_t>(magnitude / -2), y + static_cast<coord_t>(magnitude / 2) },
-                                            { x + static_cast<coord_t>(magnitude / 2), y + static_cast<coord_t>(magnitude / 2) },
-                                            { x + static_cast<coord_t>(magnitude / 2), y + static_cast<coord_t>(magnitude / -2) } };
-        case TileType::HEXAGON:
-            return geometry::polygon_outer{
-                { x, y + static_cast<coord_t>(magnitude * 1.0) }, // top
-                { x + static_cast<coord_t>(magnitude * sqrt(3) / 2), y + static_cast<coord_t>(magnitude * 0.5) }, // top-right
-                { x + static_cast<coord_t>(magnitude * sqrt(3) / 2), y - static_cast<coord_t>(magnitude * 0.5) }, // bottom-right
-                { x, y - static_cast<coord_t>(magnitude * 1.0) }, // bottom
-                { x - static_cast<coord_t>(magnitude * sqrt(3) / 2), y - static_cast<coord_t>(magnitude * 0.5) }, // bottom-left
-                { x - static_cast<coord_t>(magnitude * sqrt(3) / 2), y + static_cast<coord_t>(magnitude * 0.5) }, // top-left
-            };
-        default:
-            return geometry::polygon_outer{
-                { x, y + static_cast<coord_t>(magnitude * 1.0) }, // top
-                { x + static_cast<coord_t>(magnitude * sqrt(3) / 2), y + static_cast<coord_t>(magnitude * 0.5) }, // top-right
-                { x + static_cast<coord_t>(magnitude * sqrt(3) / 2), y - static_cast<coord_t>(magnitude * 0.5) }, // bottom-right
-                { x, y - static_cast<coord_t>(magnitude * 1.0) }, // bottom
-                { x - static_cast<coord_t>(magnitude * sqrt(3) / 2), y - static_cast<coord_t>(magnitude * 0.5) }, // bottom-left
-                { x - static_cast<coord_t>(magnitude * sqrt(3) / 2), y + static_cast<coord_t>(magnitude * 0.5) }, // top-left
-            };
-        }
+        return geometry::polygon_outer{ { x + static_cast<coord_t>(magnitude / -2), y + static_cast<coord_t>(magnitude / -2) },
+                                        { x + static_cast<coord_t>(magnitude / -2), y + static_cast<coord_t>(magnitude / 2) },
+                                        { x + static_cast<coord_t>(magnitude / 2), y + static_cast<coord_t>(magnitude / 2) },
+                                        { x + static_cast<coord_t>(magnitude / 2), y + static_cast<coord_t>(magnitude / -2) } };
     }
 
     value_type fitContent(value_type& content) const noexcept
@@ -92,7 +64,8 @@ private:
 
         // Center and scale the content in the tile.
         auto center = geometry::computeCoG(bb);
-        auto scale_factor =  1; // TODO replace by scaling factor from settings // magnitude / std::max(bb.at(1).X - bb.at(0).X, bb.at(1).Y - bb.at(0).Y);
+        double scale_factor =  (magnitude / 100.0);
+        spdlog::info("scale_factor: {}", scale_factor);
         for (auto& line : std::get<0>(content))
         {
             for (auto& point : line)
@@ -115,4 +88,3 @@ private:
     }
 };
 } // namespace infill
-#endif // INFILL_TILE_H

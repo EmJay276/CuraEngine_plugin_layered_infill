@@ -133,7 +133,7 @@ build/
 CMakeUserPresets.json
 
 include/plugin/cmdline.h
-CuraEngineTiledInfill/plugin.json
-CuraEngineTiledInfill/package.json
-CuraEngineTiledInfill/bundled_*.json
-CuraEngineTiledInfill/constants.py
+CuraEngineLayeredInfill/plugin.json
+CuraEngineLayeredInfill/package.json
+CuraEngineLayeredInfill/bundled_*.json
+CuraEngineLayeredInfill/constants.py

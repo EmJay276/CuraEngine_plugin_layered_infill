@@ -16,14 +16,14 @@ from cura.BackendPlugin import BackendPlugin
 catalog = i18nCatalog("cura")
 
 
-class CuraEngineTiledInfill(BackendPlugin):
+class CuraEngineLayeredInfill(BackendPlugin):
     def __init__(self):
         super().__init__()
         self.definition_file_paths = [Path(__file__).parent.joinpath("infill_settings.def.json").as_posix()]
         self._tiles_path = Path(__file__).parent.joinpath("tiles")
         if not self.isDebug():
             if not self.binaryPath().exists():
-                Logger.error(f"Could not find CuraEngineTiledInfill binary at {self.binaryPath().as_posix()}")
+                Logger.error(f"Could not find CuraEngineLayeredInfill binary at {self.binaryPath().as_posix()}")
             if platform.system() != "Windows" and self.binaryPath().exists():
                 st = os.stat(self.binaryPath())
                 os.chmod(self.binaryPath(), st.st_mode | stat.S_IEXEC)

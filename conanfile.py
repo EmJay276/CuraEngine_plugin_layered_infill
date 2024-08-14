@@ -16,7 +16,7 @@ required_conan_version = ">=1.60.0 <2.0.0"
 class CuraEngineInfillGeneratePluginConan(ConanFile):
     name = "curaengine_plugin_infill_generate"
     author = "UltiMaker"
-    description = "CuraEngine Tiled infill generation plugin"
+    description = "CuraEngine Layered infill generation plugin"
     license = ("agpl-3.0", "lgpl-3.0", "bsd-4")
     url = "https://github.com/conan-io/conan-center-index"
     homepage = "https://github.com/Ultimaker/CuraEngine_plugin_infill_generate"
@@ -52,7 +52,7 @@ class CuraEngineInfillGeneratePluginConan(ConanFile):
         }
     @property
     def _cura_plugin_name(self):
-        return "CuraEngineTiledInfill"
+        return "CuraEngineLayeredInfill"
 
     @property
     def _api_version(self):

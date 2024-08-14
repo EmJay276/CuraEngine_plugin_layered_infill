@@ -29,7 +29,7 @@ poly2 = sh.LineString(p_lst2)
 
 
 pattern_wkt = "shapely_test"
-tiles_path = 'C:Users\Marie\AppData\Roaming\cura\\5.7\plugins\CuraEngineTiledInfill\CuraEngineTiledInfill\\tiles'  # ToDo flexibeler pfad
+tiles_path = 'C:Users\Marie\AppData\Roaming\cura\\5.7\plugins\CuraEngineLayeredInfill\CuraEngineLayeredInfill\\tiles'  # ToDo flexibeler pfad
 dir_path = tiles_path + '\\' + pattern_wkt
 file_path = tiles_path + '\\' + pattern_wkt + '.wkt'
 

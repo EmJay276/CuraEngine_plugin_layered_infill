@@ -123,7 +123,7 @@ jobs:
         with:
           name: macos-cura-plugin
           path: |
-            plugin_inst/CuraEngineTiledInfill/**/*
+            plugin_inst/CuraEngineLayeredInfill/**/*
           retention-days: 5
 
       - name: Write the run info

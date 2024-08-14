@@ -44,9 +44,7 @@ public:
     std::tuple<ClipperLib::Paths, ClipperLib::Paths> generate(
         const std::vector<geometry::polygon_outer<>>& outer_contours,
         std::string_view pattern,
-        const int64_t tile_size,
-        const bool absolute_tiles,
-        const TileType tile_type,
+        const int64_t infill_scale,
         const int64_t center_x,
         const int64_t center_y,
         const int64_t z)
@@ -60,19 +58,10 @@ public:
                             | ranges::views::join | ranges::to_vector;
         auto bounding_box = geometry::computeBoundingBox(bounding_boxes);
 
-        constexpr int64_t line_width = 200;
-        auto width_offset = tile_size;
-        auto height_offset = tile_size;
-        auto alternating_row_offset = [width_offset, tile_type](const auto row_idx)
-        {
-            return tile_type == TileType::HEXAGON ? static_cast<int64_t>(row_idx % 2 * width_offset / 2) : 0;
-        };
         // ------------------------------------------------------------
         // Current z height
         // ------------------------------------------------------------
         spdlog::info("Received z: {}", static_cast<int64_t>(z));
-        spdlog::info("Received Center Distance x: {}", center_x);
-        spdlog::info("Received Center Distance y: {}", center_y);
 
         std::vector<std::vector<Tile>> grid;
 
@@ -126,7 +115,7 @@ public:
                 content_path = folder_path;
                 content_path += layer_name;
 
-                spdlog::info("No file for z height {} exists, file used for current layer: {}", z, layer_name);
+                spdlog::info("No file for z height {} found, file used for current layer: {}", z, layer_name);
 
             }
 
@@ -136,30 +125,9 @@ public:
         }
 
         size_t row_count{ 0 };
-        //auto start_y = bounding_box.at(0).Y; //absolute_tiles ? (bounding_box.at(0).Y / height_offset) * height_offset : bounding_box.at(0).Y - height_offset;
-        //auto start_x = bounding_box.at(0).X; //absolute_tiles ? (bounding_box.at(0).X / width_offset) * width_offset : bounding_box.at(0).X - width_offset;
-        spdlog::info("Bounding Box at 0 y: {}", bounding_box.at(0).Y);
-        spdlog::info("Bounding Box at 0 x: {}", bounding_box.at(0).X);
-        spdlog::info("Bounding Box at 1 y: {}", bounding_box.at(1).Y);
-        spdlog::info("Bounding Box at 1 x: {}", bounding_box.at(1).X);
-
-        /*
-        for (auto y = start_y; y < bounding_box.at(1).Y + height_offset; y += height_offset)
-        {
-            std::vector<Tile> row;
-            for (auto x = start_x + alternating_row_offset(row_count); x < bounding_box.at(1).X + width_offset; x += width_offset)
-            {
-                row.push_back({ .x = x, .y = y, .filepath = content_path, .magnitude = tile_size, .tile_type = tile_type });
-                spdlog::info("x: {}", x);
-                spdlog::info("y: {}", y);
-            }
-            grid.push_back(row);
-            row_count++;
-        }
-        */
 
         std::vector<Tile> row;
-        row.push_back({ .x = center_x, .y = center_y, .filepath = content_path, .magnitude = tile_size, .tile_type = tile_type });
+        row.push_back({ .x = center_x, .y = center_y, .filepath = content_path, .magnitude = infill_scale });
         grid.push_back(row);
         // Cut the grid with the outer contour using Clipper
         auto [lines, polys] = gridToPolygon(grid);

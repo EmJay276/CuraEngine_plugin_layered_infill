@@ -24,7 +24,7 @@ on:
       - 'include/**'
       - 'src/**'
       - 'tests/**'
-      - 'CuraEngineTiledInfill/**'
+      - 'CuraEngineLayeredInfill/**'
       - 'templates'
       - 'conanfile.py'
       - 'CMakeLists.txt'
