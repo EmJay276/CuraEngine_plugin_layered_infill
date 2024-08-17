@@ -1,0 +1,9 @@
+{
+  "name": "CuraEngineLayeredInfill",
+  "author": "Michael Jaeger, Marie Schmid",
+  "version": "1.0.0",
+  "description": "CuraEngine Layered infill generation plugin",
+  "api": "8",
+  "supported_sdk_versions": [ "8.5.0"],
+  "i18n-catalog": "cura"
+}
