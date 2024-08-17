@@ -67,7 +67,7 @@ struct Generate
     Broadcast::shared_settings_t settings{ std::make_shared<Broadcast::settings_t>() };
     std::shared_ptr<Metadata> metadata{ std::make_shared<Metadata>() };
     std::filesystem::path tiles_path;
-    infill::InfillGenerator generator{ .tiles_path = tiles_path };
+    infill::InfillGenerator generator;
 
     boost::asio::awaitable<void> run()
     {
@@ -80,17 +80,19 @@ struct Generate
             co_await agrpc::request(&T::RequestCall, *generate_service, server_context, request, writer, boost::asio::use_awaitable);
             const auto pattern_setting = Settings::getPattern(request.pattern(), metadata->plugin_name, metadata->plugin_version);
             const auto infill_scale_setting = Settings::retrieveSettings("infill_scale", request, metadata);
+            const auto infill_directory_setting = Settings::retrieveSettings("infill_directory", request, metadata);
             const auto center_x_setting = Settings::retrieveSettings("center_x", request, metadata);
             const auto center_y_setting = Settings::retrieveSettings("center_y", request, metadata);
             const auto z_setting = Settings::retrieveZ(request);
             const auto [machine_width, machine_depth] = Settings::machineSize(request);
 
-            if (! pattern_setting.has_value() || ! infill_scale_setting.has_value() || ! center_x_setting.has_value() || ! center_y_setting.has_value() || ! machine_width.has_value() || ! machine_depth.has_value() || ! z_setting.has_value())
+            if (! pattern_setting.has_value() || ! infill_scale_setting.has_value() || ! infill_directory_setting.has_value() || ! center_x_setting.has_value() || ! center_y_setting.has_value() || ! machine_width.has_value() || ! machine_depth.has_value() || ! z_setting.has_value())
             {
                 spdlog::error(
-                    "pattern: {}, infill scale: {}, center distance x: {}, center distance y: {}, machine width: {}, machine depth: {}, z: {}",
+                    "pattern: {}, infill scale: {}, infill directory: {}, center distance x: {}, center distance y: {}, machine width: {}, machine depth: {}, z: {}",
                     pattern_setting.has_value(),
                     infill_scale_setting.has_value(),
+                    infill_directory_setting.has_value(),
                     center_x_setting.has_value(),
                     center_y_setting.has_value(),
                     machine_width.has_value(),
@@ -100,9 +102,10 @@ struct Generate
                 status = grpc::Status(
                     grpc::StatusCode::INTERNAL,
                     fmt::format(
-                        "Plugin could not retrieve settings! pattern: {}, infill scale: {}, center distance x: {}, center distance y: {}, machine width: {}, machine depth: {}, z: {}",
+                        "Plugin could not retrieve settings! pattern: {}, infill scale: {}, infill directory: {}, center distance x: {}, center distance y: {}, machine width: {}, machine depth: {}, z: {}",
                         pattern_setting.has_value(),
                         infill_scale_setting.has_value(),
+                        infill_directory_setting.has_value(),
                         center_x_setting.has_value(),
                         center_y_setting.has_value(),
                         machine_width.has_value(),
@@ -116,8 +119,8 @@ struct Generate
                 continue;
             }
 
-            spdlog::info("scale: {}", infill_scale_setting.value());
-            const int64_t infill_scale = std::stoi(infill_scale_setting.value());
+            const int64_t infill_scale = std::stold(infill_scale_setting.value());
+                generator.tiles_path = infill_directory_setting.value();
             const int64_t center_x = (long long) (1000.0 * (std::stold(machine_width.value()) / 2.0 + std::stold(center_x_setting.value())));
             const int64_t center_y = (long long) (1000.0 * (std::stold(machine_depth.value()) / 2.0 - std::stold(center_y_setting.value())));
             const int64_t z = std::stoll(z_setting.value());

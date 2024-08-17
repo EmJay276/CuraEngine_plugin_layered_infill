@@ -20,15 +20,13 @@ class CuraEngineLayeredInfill(BackendPlugin):
     def __init__(self):
         super().__init__()
         self.definition_file_paths = [Path(__file__).parent.joinpath("infill_settings.def.json").as_posix()]
-        self._tiles_path = Path(__file__).parent.joinpath("tiles")
         if not self.isDebug():
             if not self.binaryPath().exists():
                 Logger.error(f"Could not find CuraEngineLayeredInfill binary at {self.binaryPath().as_posix()}")
             if platform.system() != "Windows" and self.binaryPath().exists():
                 st = os.stat(self.binaryPath())
                 os.chmod(self.binaryPath(), st.st_mode | stat.S_IEXEC)
-
-            self._plugin_command = [self.binaryPath().as_posix(), "--tiles_path", self._tiles_path.as_posix()]
+            self._plugin_command = [self.binaryPath().as_posix(), "--tiles_path", Path(__file__).parent.as_posix()]
 
         self._supported_slots = [200]  # ModifyPostprocess SlotID
         ContainerRegistry.getInstance().containerLoadComplete.connect(self._on_container_load_complete)
@@ -50,12 +48,8 @@ class CuraEngineLayeredInfill(BackendPlugin):
             return
 
         for definition in container.findDefinitions(key="infill_pattern"):
-            for pattern in self.getTilePatterns():
-                definition.extend_category(pattern[0], pattern[1], plugin_id=self.getPluginId(), plugin_version=self.getVersion())
-
-    def getTilePatterns(self):
-        tile_paths = self._tiles_path.glob("*.wkt")
-        return [(p.name.replace(" ", "_").replace(".wkt", ""), " ".join([w.capitalize() for w in p.name.replace("_", " ").replace(".wkt", "").split(" ")])) for p in tile_paths]
+            definition.extend_category('layered_infill', 'Layered Infill', plugin_id=self.getPluginId(),
+                                       plugin_version=self.getVersion())
 
     def getPort(self):
         return super().getPort() if not self.isDebug() else int(os.environ["CURAENGINE_INFILL_GENERATE_PORT"])

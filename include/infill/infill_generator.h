@@ -67,8 +67,6 @@ public:
 
         //folder where all the files for each layer are
         auto folder_path = tiles_path;
-        folder_path += "/";
-        folder_path += pattern;
 
         //path used later in the plugin for the current layer file
         auto content_path = tiles_path;
@@ -82,6 +80,7 @@ public:
             content_path += layer_name;
 
             if(std::filesystem::exists(content_path)){ //if a file for the current layer exists
+
                 spdlog::info("File used for current layer: {}", layer_name);
             } else { //no file exists, next higher file will be used error message
                 std::filesystem::directory_iterator iter{folder_path};

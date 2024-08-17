@@ -12,6 +12,14 @@
         "settable_per_mesh": true,
         "enabled": "infill_pattern.startswith(\"PLUGIN::CuraEngineLayeredInfill\")"
       },
+      "infill_directory": {
+        "label": "Layered Infill Directory",
+        "description": "Directory of the files used for the layered infill.",
+        "type": "str",
+        "default_value": true,
+        "settable_per_mesh": true,
+        "enabled": "infill_pattern.startswith(\"PLUGIN::CuraEngineLayeredInfill\")"
+      },
       "center_x": {
         "label": "Infill Center X",
         "description": "Distance between build plate center and Infill Center in x coordinate.",
