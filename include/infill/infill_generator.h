@@ -65,62 +65,58 @@ public:
 
         std::vector<std::vector<Tile>> grid;
 
-        //folder where all the files for each layer are
-        auto folder_path = tiles_path;
-
         //path used later in the plugin for the current layer file
         auto content_path = tiles_path;
 
-        if (std::filesystem::is_directory(folder_path)) { //if a directory with the same name as the pattern exists
-            auto layer_name = "/" + std::to_string(z) + "_";
-            layer_name += pattern;
-            layer_name += ".wkt";
-
-            content_path = folder_path;
-            content_path += layer_name;
-
-            if(std::filesystem::exists(content_path)){ //if a file for the current layer exists
-
-                spdlog::info("File used for current layer: {}", layer_name);
-            } else { //no file exists, next higher file will be used error message
-                std::filesystem::directory_iterator iter{folder_path};
-                std::filesystem::path cur_path;
-                std::string layer_prefix = "";
-                std::vector<int> all_file_pre;
-
-                for (auto const &dir_entry: iter) {
-                    cur_path= iter->path();
-                    auto filename = cur_path.filename().string();
-                    auto prefix = std::stoi(filename.substr(0, filename.find("_")));
-
-                    all_file_pre.push_back(prefix);
-                }
-
-                std::sort(all_file_pre.begin(),all_file_pre.end());
-                for(auto i=all_file_pre.begin(); i<all_file_pre.end(); i++){
-                    if(*i > z){
-                        layer_prefix = std::to_string(*i);
-                        break;
-                    }
-	            }
-	            if (layer_prefix == ""){
-                    layer_prefix = std::to_string(all_file_pre.back());
-                }
-
-                layer_name = "/" + layer_prefix + "_";
+        if (std::filesystem::is_directory(tiles_path)) { //if the given directory exists
+            if (!std::filesystem::is_empty(tiles_path)) { //if the given directory is empty
+                auto layer_name = "/" + std::to_string(z) + "_";
                 layer_name += pattern;
                 layer_name += ".wkt";
 
-                content_path = folder_path;
-                content_path += layer_name;
+                content_path += layer_name; //given directory + /'z_height'_'layered_infill'
 
-                spdlog::info("No file for z height {} found, file used for current layer: {}", z, layer_name);
+                if(std::filesystem::exists(content_path)){ //if a file for the current layer exists
+                    spdlog::info("File used for current layer: {}", layer_name);
+                } else { //no file exists, next higher file will be used
+                    std::filesystem::directory_iterator iter{tiles_path};
+                    std::filesystem::path cur_path;
+                    std::string layer_prefix = "";
+                    std::vector<int> all_file_pre;
 
-            }
+                    for (auto const &dir_entry: iter) { //add all z height prefixes to array
+                        cur_path= iter->path();
+                        auto filename = cur_path.filename().string();
+                        auto prefix = std::stoi(filename.substr(0, filename.find("_")));
 
-        } else { // no directory with .wkt files exists for current infill
-            spdlog::info("No .wkt folder found for current infill. Resuming with regular infill generation.");
-            content_path.append(fmt::format("{}.wkt", pattern));
+                        all_file_pre.push_back(prefix);
+                    }
+
+                    std::sort(all_file_pre.begin(),all_file_pre.end()); //sort all z height prefixes
+                    for(auto i=all_file_pre.begin(); i<all_file_pre.end(); i++){
+                        if(*i > z){ //find next higher z height
+                            layer_prefix = std::to_string(*i);
+                            break;
+                        }
+                    }
+                    if (layer_prefix == ""){ // if no higher z height was found, use highest z height
+                        layer_prefix = std::to_string(all_file_pre.back());
+                    }
+
+                    layer_name = "/" + layer_prefix + "_";
+                    layer_name += pattern;
+                    layer_name += ".wkt";
+
+                    content_path = tiles_path;
+                    content_path += layer_name; //given directory + /'z_height'_'layered_infill'
+
+                    spdlog::info("No file for z height {} found, file used for current layer: {}", z, layer_name);
+                    }
+                } else {
+                    spdlog::error("No files in given directory");
+                }
+        } else {
+            spdlog::error("The given directory does not exist. Slicing failed");
         }
 
         size_t row_count{ 0 };
