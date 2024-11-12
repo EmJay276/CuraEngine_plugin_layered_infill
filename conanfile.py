@@ -6,7 +6,7 @@ from conan.tools.build import check_min_cppstd
 from conan.tools.cmake import CMake, CMakeDeps, CMakeToolchain, cmake_layout
 from conan.tools.env import VirtualBuildEnv
 from conan.tools.files import copy
-from conan.tools.microsoft import check_min_vs, is_msvc_static_runtime, is_msvc
+from conan.tools.microsoft import check_min_vs, is_msvc, is_msvc_static_runtime
 from conan.tools.scm import Version
 from jinja2 import Template
 
@@ -145,16 +145,16 @@ class CuraEngineInfillGeneratePluginConan(ConanFile):
 
     def requirements(self):
         self.requires("boost/1.82.0")
-        self.requires("openssl/1.1.1l")
+        self.requires("openssl/3.2.0")
         self.requires("asio-grpc/2.6.0")
-        self.requires("spdlog/1.10.0")
+        self.requires("spdlog/1.12.0")
         self.requires("docopt.cpp/0.6.3")
         self.requires("range-v3/0.12.0")
-        self.requires("clipper/6.4.2")
+        self.requires("clipper/6.4.2@ultimaker/stable")
         self.requires("grpc/1.50.1")
         self.requires("ctre/3.7.2")
         self.requires("neargye-semver/0.3.0")
-        self.requires("curaengine_grpc_definitions/latest@ultimaker/testing")
+        self.requires("curaengine_grpc_definitions/0.3.0")
 
     def validate(self):
         # validate the minimum cpp standard supported. For C++ projects only

@@ -1,5 +1,5 @@
 # Copyright (c) 2023 UltiMaker
-# CuraEngineTiledInfill is released under the terms of the LGPLv3 or higher.
+# CuraEngineLayeredInfill is released under the terms of the LGPLv3 or higher.
 
 import platform
 

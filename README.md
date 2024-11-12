@@ -30,7 +30,7 @@ Windows
 
 That said, installing our config goes as follows:
 ```bash
-pip install conan==1.60
+pip install conan==1.65
 conan config install https://github.com/ultimaker/conan-config.git
 conan profile new default --detect --force
 ```
