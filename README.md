@@ -7,7 +7,7 @@ This Engine plugin extends the current infill patterns in CURA with  your own in
 - Each file need to consists of a (consistent) rectangular bounding box as first polygon. E.g. `POLYGON ((-33758 -21651, 61856 -21651, 61856 52508, -33758 52508, -33758 -21651))`.
 - The center of the bounding box is placed at the provided `Infill Center X` and `Infill Center Y` in Cura, if used by commandline, these parameters are called `center_x` and `center_y`. If you move the object in Cura do not forget to adjust these values! An automatic adjustment of these values is currently not possible.
 
-This plugin is based on the [CuraEngine_plugin_infill_generate](https://github.com/Ultimaker/CuraEngine_plugin_infill_generate) provided as a template these kind of plugins from Ultimaker
+This plugin is based on the [CuraEngine_plugin_infill_generate](https://github.com/Ultimaker/CuraEngine_plugin_infill_generate) provided as a template for these kind of plugins from Ultimaker
 
 This (template) plugin consist of the following licenses:
 
