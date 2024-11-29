@@ -67,4 +67,4 @@ class CuraEngineLayeredInfill(BackendPlugin):
         machine = platform.machine()
         if machine == "AMD64":
             machine = "x86_64"
-        return Path(__file__).parent.joinpath(machine, platform.system(), f"curaengine_plugin_infill_generate{ext}").resolve()
+        return Path(__file__).parent.joinpath(machine, platform.system(), f"curaengine_plugin_layered_infill{ext}").resolve()

@@ -14,12 +14,12 @@ required_conan_version = ">=1.60.0 <2.0.0"
 
 
 class CuraEngineInfillGeneratePluginConan(ConanFile):
-    name = "curaengine_plugin_infill_generate"
+    name = "curaengine_plugin_layered_infill"
     author = "UltiMaker"
     description = "CuraEngine Layered infill generation plugin"
     license = ("agpl-3.0", "lgpl-3.0", "bsd-4")
     url = "https://github.com/conan-io/conan-center-index"
-    homepage = "https://github.com/Ultimaker/CuraEngine_plugin_infill_generate"
+    homepage = "https://github.com/Ultimaker/CuraEngine_plugin_layered_infill"
     topics = ("protobuf", "asio", "plugin", "curaengine", "gcode-generation", "3D-printing")
     package_type = "library"
     settings = "os", "arch", "compiler", "build_type"
@@ -138,7 +138,7 @@ class CuraEngineInfillGeneratePluginConan(ConanFile):
     def layout(self):
         cmake_layout(self)
         self.cpp.package.resdirs = [os.path.join("res", self._cura_plugin_name).replace("\\", "/")]
-        self.cpp.build.bins = ["curaengine_plugin_infill_generate"]
+        self.cpp.build.bins = ["curaengine_plugin_layered_infill"]
 
     def build_requirements(self):
         self.test_requires("standardprojectsettings/[>=0.1.0]@ultimaker/stable")
@@ -197,10 +197,10 @@ class CuraEngineInfillGeneratePluginConan(ConanFile):
     def package(self):
         copy(self, pattern="LICENSE", dst=os.path.join(self.package_folder, "licenses"), src=self.source_folder)
         ext = ".exe" if self.settings.os == "Windows" else ""
-        copy(self, pattern=f"curaengine_plugin_infill_generate{ext}", dst=os.path.join(self.package_folder, "bin"), src=os.path.join(self.build_folder))
+        copy(self, pattern=f"curaengine_plugin_layered_infill{ext}", dst=os.path.join(self.package_folder, "bin"), src=os.path.join(self.build_folder))
         copy(self, pattern="*", dst=os.path.join(self.package_folder, "res", self._cura_plugin_name), src=os.path.join(self.source_folder, self._cura_plugin_name))
 
     def deploy(self):
         ext = ".exe" if self.settings.os == "Windows" else ""
-        copy(self, pattern=f"curaengine_plugin_infill_generate{ext}", dst=self.install_folder, src=os.path.join(self.package_folder, "bin"))
+        copy(self, pattern=f"curaengine_plugin_layered_infill{ext}", dst=self.install_folder, src=os.path.join(self.package_folder, "bin"))
         copy(self, pattern="*", dst=os.path.join(self.install_folder, self._cura_plugin_name), src=os.path.join(self.package_folder, "res"))
