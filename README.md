@@ -52,3 +52,7 @@ conan build .
 ```
 
 [For more info](https://github.com/Ultimaker/CuraEngine/wiki/Building-CuraEngine-From-Source)
+
+
+### Acknowledgement
+The presented research is funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) – Project No. WA 2913/53-1 with the title ”KNOTEN – Design method for the holistic optimisation of truss structures with additively manufactured nodes while taking manufacturing and assembly restrictions into account”. The authors thank the German Research Foundation for the financial support.
