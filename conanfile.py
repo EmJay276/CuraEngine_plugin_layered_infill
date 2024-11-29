@@ -15,7 +15,7 @@ required_conan_version = ">=1.60.0 <2.0.0"
 
 class CuraEngineInfillGeneratePluginConan(ConanFile):
     name = "curaengine_plugin_layered_infill"
-    author = "Michael Jäger, Marie Schmid"
+    author = "Michael Jaeger, Marie Schmid"
     email = "michael@mjaeger.eu"
     description = "CuraEngine Layered infill generation plugin"
     license = ("agpl-3.0", "lgpl-3.0", "bsd-4")

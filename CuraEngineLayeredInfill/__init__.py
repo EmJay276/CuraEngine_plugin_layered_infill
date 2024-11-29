@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Michael Jäger, Marie Schmid
+# Copyright (c) 2024 Michael Jaeger, Marie Schmid
 # CuraEngineLayeredInfill is released under the terms of the LGPLv3 or higher.
 
 import platform
