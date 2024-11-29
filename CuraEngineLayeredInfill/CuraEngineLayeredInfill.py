@@ -1,4 +1,4 @@
-# Copyright (c) 2023 UltiMaker
+# Copyright (c) 2024 Michael Jäger, Marie Schmid
 # CuraEngineLayeredInfill is released under the terms of the LGPLv3 or higher.
 
 import os

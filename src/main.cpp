@@ -1,3 +1,4 @@
+// Copyright (c) 2024 Michael Jäger, Marie Schmid
 
 #include "cura/plugins/slots/infill/v0/generate.grpc.pb.h"
 #include "cura/plugins/slots/infill/v0/generate.pb.h"
