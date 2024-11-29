@@ -1,14 +1,15 @@
-# CuraEngine_plugin_infill_generate
-This Engine plugin extends the current infill patterns in CURA with:
+# CuraEngine_plugin_layered_infill
+This Engine plugin extends the current infill patterns in CURA with  your own infill patters provided in via `*.wtk` files
 
-- Continuous Honeycomb
-- Normal Honey Comb
-- Cura
-- Honeycomb Fill
-- ... You can create your own infill tills by adding `*.wtk` files in the `CuraEngineLayeredInfill/tiles/` folder even when you already installed it in Cura...
+- The `*.wtk` files can be placed in any directory, and must be set Cura in the `Layered Infill Directory` setting, if used by commandline, this parameter is called `infill_directory`.
+- Each layer can have its own pattern by providing several `*.wtk` files with the corresponding `<layer_height>` in µm they are applied. 
+- The naming pattern of the files is `<layer_height>_layered_infill` E.g. `1000_layered_infill.wkt` for the layer at `z = 1.0 mm`.
+- Each file need to consists of a (consistent) rectangular bounding box as first polygon. E.g. `POLYGON ((-33758 -21651, 61856 -21651, 61856 52508, -33758 52508, -33758 -21651))`.
+- The center of the bounding box is placed at the provided `Infill Center X` and `Infill Center Y` in Cura, if used by commandline, these parameters are called `center_x` and `center_y`. If you move the object in Cura do not forget to adjust these values! An automatic adjustment of these values is currently not possible.
 
-NOTE: Please note that this plugin is Experimental and adding custom infills is not possible at the moment.
-This plugin consist of the following licenses:
+This plugin is based on the [CuraEngine_plugin_infill_generate](https://github.com/Ultimaker/CuraEngine_plugin_infill_generate) provided as a template these kind of plugins from Ultimaker
+
+This (template) plugin consist of the following licenses:
 
 - LGPLv3 front end Cura plugin.
 - BSD-4 C++ Business logic headers for the CuraEngine plugin logic
@@ -34,10 +35,10 @@ pip install conan==1.65
 conan config install https://github.com/ultimaker/conan-config.git
 conan profile new default --detect --force
 ```
-2. Clone CuraEngine_plugin_infill_generate
+2. Clone CuraEngine_plugin_layered_infill
 ```bash
-git clone https://github.com/Ultimaker/CuraEngine_plugin_infill_generate.git CuraEngine_plugin_infill_generate
-cd CuraEngine_plugin_infill_generate
+git clone https://github.com/EmJay276/CuraEngine_plugin_layered_infill CuraEngine_plugin_layered_infill
+cd CuraEngine_plugin_layered_infill
 ```
 
 3. Install & Build CuraEngine (Release)
