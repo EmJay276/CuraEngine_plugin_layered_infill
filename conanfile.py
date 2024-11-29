@@ -15,11 +15,12 @@ required_conan_version = ">=1.60.0 <2.0.0"
 
 class CuraEngineInfillGeneratePluginConan(ConanFile):
     name = "curaengine_plugin_layered_infill"
-    author = "UltiMaker"
+    author = "Michael Jäger, Marie Schmid"
+    email = "michael@mjaeger.eu"
     description = "CuraEngine Layered infill generation plugin"
     license = ("agpl-3.0", "lgpl-3.0", "bsd-4")
     url = "https://github.com/conan-io/conan-center-index"
-    homepage = "https://github.com/Ultimaker/CuraEngine_plugin_layered_infill"
+    homepage = "https://github.com/EmJay276/CuraEngine_plugin_layered_infill"
     topics = ("protobuf", "asio", "plugin", "curaengine", "gcode-generation", "3D-printing")
     package_type = "library"
     settings = "os", "arch", "compiler", "build_type"
@@ -35,7 +36,7 @@ class CuraEngineInfillGeneratePluginConan(ConanFile):
 
     def set_version(self):
         if not self.version:
-            self.version = "0.2.0-beta.2"
+            self.version = "0.1.0"
 
     @property
     def _min_cppstd(self):
@@ -109,6 +110,7 @@ class CuraEngineInfillGeneratePluginConan(ConanFile):
         with open(os.path.join(self.source_folder, self._cura_plugin_name, "package.json"), "w") as f:
             f.write(template.render(author_id=self.author.lower(),
                                     author=self.author,
+                                    email=self.email,
                                     website_author=self.homepage,
                                     description=self.description,
                                     display_name=self._cura_plugin_name,
