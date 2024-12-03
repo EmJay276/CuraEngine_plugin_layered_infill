@@ -61,7 +61,7 @@ class CuraEngineInfillGeneratePluginConan(ConanFile):
 
     @property
     def _sdk_versions(self):
-        return ["8.5.0"]
+        return ["8.9.0"]
 
     @property
     def _max_sdk_version(self):
