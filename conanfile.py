@@ -6,7 +6,7 @@ from conan.tools.build import check_min_cppstd
 from conan.tools.cmake import CMake, CMakeDeps, CMakeToolchain, cmake_layout
 from conan.tools.env import VirtualBuildEnv
 from conan.tools.files import copy
-from conan.tools.microsoft import check_min_vs, is_msvc_static_runtime, is_msvc
+from conan.tools.microsoft import check_min_vs, is_msvc, is_msvc_static_runtime
 from conan.tools.scm import Version
 from jinja2 import Template
 
@@ -14,12 +14,13 @@ required_conan_version = ">=1.60.0 <2.0.0"
 
 
 class CuraEngineInfillGeneratePluginConan(ConanFile):
-    name = "curaengine_plugin_infill_generate"
-    author = "UltiMaker"
-    description = "CuraEngine Tiled infill generation plugin"
+    name = "curaengine_plugin_layered_infill"
+    author = "Michael Jaeger, Marie Schmid"
+    email = "michael@mjaeger.eu"
+    description = "CuraEngine Layered infill generation plugin"
     license = ("agpl-3.0", "lgpl-3.0", "bsd-4")
     url = "https://github.com/conan-io/conan-center-index"
-    homepage = "https://github.com/Ultimaker/CuraEngine_plugin_infill_generate"
+    homepage = "https://github.com/EmJay276/CuraEngine_plugin_layered_infill"
     topics = ("protobuf", "asio", "plugin", "curaengine", "gcode-generation", "3D-printing")
     package_type = "library"
     settings = "os", "arch", "compiler", "build_type"
@@ -35,7 +36,7 @@ class CuraEngineInfillGeneratePluginConan(ConanFile):
 
     def set_version(self):
         if not self.version:
-            self.version = "0.2.0-beta.2"
+            self.version = "0.1.0"
 
     @property
     def _min_cppstd(self):
@@ -52,7 +53,7 @@ class CuraEngineInfillGeneratePluginConan(ConanFile):
         }
     @property
     def _cura_plugin_name(self):
-        return "CuraEngineTiledInfill"
+        return "CuraEngineLayeredInfill"
 
     @property
     def _api_version(self):
@@ -60,7 +61,7 @@ class CuraEngineInfillGeneratePluginConan(ConanFile):
 
     @property
     def _sdk_versions(self):
-        return ["8.5.0"]
+        return ["8.9.0"]
 
     @property
     def _max_sdk_version(self):
@@ -109,6 +110,7 @@ class CuraEngineInfillGeneratePluginConan(ConanFile):
         with open(os.path.join(self.source_folder, self._cura_plugin_name, "package.json"), "w") as f:
             f.write(template.render(author_id=self.author.lower(),
                                     author=self.author,
+                                    email=self.email,
                                     website_author=self.homepage,
                                     description=self.description,
                                     display_name=self._cura_plugin_name,
@@ -138,23 +140,23 @@ class CuraEngineInfillGeneratePluginConan(ConanFile):
     def layout(self):
         cmake_layout(self)
         self.cpp.package.resdirs = [os.path.join("res", self._cura_plugin_name).replace("\\", "/")]
-        self.cpp.build.bins = ["curaengine_plugin_infill_generate"]
+        self.cpp.build.bins = ["curaengine_plugin_layered_infill"]
 
     def build_requirements(self):
         self.test_requires("standardprojectsettings/[>=0.1.0]@ultimaker/stable")
 
     def requirements(self):
         self.requires("boost/1.82.0")
-        self.requires("openssl/1.1.1l")
+        self.requires("openssl/3.2.0")
         self.requires("asio-grpc/2.6.0")
-        self.requires("spdlog/1.10.0")
+        self.requires("spdlog/1.12.0")
         self.requires("docopt.cpp/0.6.3")
         self.requires("range-v3/0.12.0")
-        self.requires("clipper/6.4.2")
+        self.requires("clipper/6.4.2@ultimaker/stable")
         self.requires("grpc/1.50.1")
         self.requires("ctre/3.7.2")
         self.requires("neargye-semver/0.3.0")
-        self.requires("curaengine_grpc_definitions/latest@ultimaker/testing")
+        self.requires("curaengine_grpc_definitions/0.3.0")
 
     def validate(self):
         # validate the minimum cpp standard supported. For C++ projects only
@@ -197,10 +199,10 @@ class CuraEngineInfillGeneratePluginConan(ConanFile):
     def package(self):
         copy(self, pattern="LICENSE", dst=os.path.join(self.package_folder, "licenses"), src=self.source_folder)
         ext = ".exe" if self.settings.os == "Windows" else ""
-        copy(self, pattern=f"curaengine_plugin_infill_generate{ext}", dst=os.path.join(self.package_folder, "bin"), src=os.path.join(self.build_folder))
+        copy(self, pattern=f"curaengine_plugin_layered_infill{ext}", dst=os.path.join(self.package_folder, "bin"), src=os.path.join(self.build_folder))
         copy(self, pattern="*", dst=os.path.join(self.package_folder, "res", self._cura_plugin_name), src=os.path.join(self.source_folder, self._cura_plugin_name))
 
     def deploy(self):
         ext = ".exe" if self.settings.os == "Windows" else ""
-        copy(self, pattern=f"curaengine_plugin_infill_generate{ext}", dst=self.install_folder, src=os.path.join(self.package_folder, "bin"))
+        copy(self, pattern=f"curaengine_plugin_layered_infill{ext}", dst=self.install_folder, src=os.path.join(self.package_folder, "bin"))
         copy(self, pattern="*", dst=os.path.join(self.install_folder, self._cura_plugin_name), src=os.path.join(self.package_folder, "res"))

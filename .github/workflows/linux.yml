@@ -6,7 +6,7 @@ on:
     inputs:
       plugin_conan_version:
         description: 'Plugin Conan Version'
-        default: 'curaengine_plugin_infill_generate/latest@ultimaker/testing'
+        default: 'curaengine_plugin_layered_infill/latest@ultimaker/testing'
         required: true
         type: string
       conan_args:
@@ -33,7 +33,7 @@ on:
     inputs:
       plugin_conan_version:
         description: 'Plugin Conan Version'
-        default: 'curaengine_plugin_infill_generate/latest@ultimaker/testing'
+        default: 'curaengine_plugin_layered_infill/latest@ultimaker/testing'
         required: true
         type: string
       conan_args:
@@ -120,7 +120,7 @@ jobs:
         with:
           name: ${{ runner.os }}-${{ runner.arch }}
           path: |
-            plugin_inst/curaengine_plugin_infill_generate
+            plugin_inst/curaengine_plugin_layered_infill
           retention-days: 5
 
       - name: Upload the cura plugin
@@ -128,7 +128,7 @@ jobs:
         with:
           name: linux-cura-plugin
           path: |
-            plugin_inst/CuraEngineTiledInfill/**/*
+            plugin_inst/CuraEngineLayeredInfill/**/*
           retention-days: 5
 
       - name: Write the run info

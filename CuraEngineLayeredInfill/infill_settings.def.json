@@ -1,0 +1,45 @@
+{
+  "infill": {
+    "children": {
+      "infill_scale": {
+        "label": "Infill Scale",
+        "description": "Size of the Infill in percent",
+        "unit": "%",
+        "type": "int",
+        "minimum_value": "0",
+        "value": "100",
+
+        "settable_per_mesh": true,
+        "enabled": "infill_pattern.startswith(\"PLUGIN::CuraEngineLayeredInfill\")"
+      },
+      "infill_directory": {
+        "label": "Layered Infill Directory",
+        "description": "Directory of the files used for the layered infill.",
+        "type": "str",
+        "default_value": true,
+        "settable_per_mesh": true,
+        "enabled": "infill_pattern.startswith(\"PLUGIN::CuraEngineLayeredInfill\")"
+      },
+      "center_x": {
+        "label": "Infill Center X",
+        "description": "Distance between build plate center and Infill Center in x coordinate.",
+        "unit": "mm",
+        "type": "float",
+        "value": "0.0",
+
+        "settable_per_mesh": true,
+        "enabled": "infill_pattern.startswith(\"PLUGIN::CuraEngineLayeredInfill\")"
+      },
+      "center_y": {
+        "label": "Infill Center Y",
+        "description": "Distance between build plate center and Infill Center in y coordinate.",
+        "unit": "mm",
+        "type": "float",
+        "value": "0.0",
+
+        "settable_per_mesh": true,
+        "enabled": "infill_pattern.startswith(\"PLUGIN::CuraEngineLayeredInfill\")"
+      }
+    }
+  }
+}

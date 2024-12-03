@@ -1,6 +1,6 @@
 // BSD 4-Clause License
 //
-// Copyright (c) 2023, UltiMaker
+// Copyright (c) 2024 Michael Jaeger, Marie Schmid
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,6 @@
 #define PLUGIN_SETTINGS_H
 
 #include "cura/plugins/slots/broadcast/v0/broadcast.grpc.pb.h"
-#include "infill/tile_type.h"
 
 #include <semver.hpp>
 
@@ -63,6 +62,26 @@ struct Settings
         line_distance = std::stoll(global_settings.at("infill_line_distance"));
     }
 
+    static std::optional<std::string> retrieveZ(const auto& request)
+    {
+        auto settings = request.settings().settings();
+        if (settings.contains("z"))
+        {
+            return settings.at("z");
+        }
+        return std::nullopt;
+    }
+
+    static std::tuple<std::optional<std::string>, std::optional<std::string>> machineSize(const auto& request)
+    {
+        auto settings = request.settings().settings();
+        if (settings.contains("machine_width") && settings.contains("machine_depth"))
+        {
+            return std::make_tuple(settings.at("machine_width"), settings.at("machine_depth"));
+        }
+        return std::make_tuple(std::nullopt, std::nullopt);;
+    }
+
 
     static std::optional<std::string_view> getPattern(std::string_view pattern, std::string_view plugin_name, std::string_view plugin_version)
     {
@@ -72,19 +91,6 @@ struct Settings
             return pattern.substr(last_pos + 2);
         }
         return std::nullopt;
-    }
-
-    static constexpr infill::TileType getTileType(std::string_view tile_type)
-    {
-        if (tile_type == "square")
-        {
-            return infill::TileType::SQUARE;
-        }
-        if (tile_type == "hexagon")
-        {
-            return infill::TileType::HEXAGON;
-        }
-        return infill::TileType::NONE;
     }
 
 
