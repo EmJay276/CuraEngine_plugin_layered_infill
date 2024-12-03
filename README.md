@@ -1,11 +1,13 @@
-# CuraEngine_plugin_layered_infill
-This Engine plugin extends the current infill patterns in CURA with  your own infill patters provided in via `*.wtk` files
+# CuraEngine Layered Infill Plugin
+This Engine plugin extends the current infill patterns in CURA with your own infill patterns provided via `*.wtk` files
 
 - The `*.wtk` files can be placed in any directory, and must be set Cura in the `Layered Infill Directory` setting, if used by commandline, this parameter is called `infill_directory`.
 - Each layer can have its own pattern by providing several `*.wtk` files with the corresponding `<layer_height>` in µm they are applied. 
 - The naming pattern of the files is `<layer_height>_layered_infill` E.g. `1000_layered_infill.wkt` for the layer at `z = 1.0 mm`.
 - Each file need to consists of a (consistent) rectangular bounding box as first polygon. E.g. `POLYGON ((-33758 -21651, 61856 -21651, 61856 52508, -33758 52508, -33758 -21651))`.
 - The center of the bounding box is placed at the provided `Infill Center X` and `Infill Center Y` in Cura, if used by commandline, these parameters are called `center_x` and `center_y`. If you move the object in Cura do not forget to adjust these values! An automatic adjustment of these values is currently not possible.
+- **`Infill Center X`, `Infill Center Y` and `Layered Infill Directory` must be set visible manually!** Just search for them, right-click on the name and select **Keep this setting visible**
+- If no `*.wtk` file is found for one layer the closest one above is used. If no layer above is available, the closest one below is used.
 
 This plugin is based on the [CuraEngine_plugin_infill_generate](https://github.com/Ultimaker/CuraEngine_plugin_infill_generate) provided as a template for these kind of plugins from Ultimaker
 
@@ -23,13 +25,22 @@ Windows
     CMake 3.23 or higher
     nmake
 
+## Dependencies
+
+- Cura 5.9.0 or newer
+
 
 ## Installation
 
-1. Configure Conan
-   Before you start, if you use conan for other (big) projects as well, it's a good idea to either switch conan-home and/or backup your existing conan configuration(s).
+### Cura Marketplace
+Just install it from the PlugIn Marketplace
 
-That said, installing our config goes as follows:
+[CuraEngine Layered Infill Plugin](https://marketplace.ultimaker.com/app/cura/plugins/EmJay276/CuraEngineLayeredInfillPlugin)
+
+
+### Building Manually
+
+1. Configure Conan
 ```bash
 pip install conan==1.65
 conan config install https://github.com/ultimaker/conan-config.git
@@ -55,4 +66,4 @@ conan build .
 
 
 ### Acknowledgement
-The presented research is funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) – Project No. WA 2913/53-1 with the title ”KNOTEN – Design method for the holistic optimisation of truss structures with additively manufactured nodes while taking manufacturing and assembly restrictions into account”. The authors thank the German Research Foundation for the financial support.
+The presented research is funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) – Project No. WA 2913/53-1 with the title "KNOTEN – Design method for the holistic optimisation of truss structures with additively manufactured nodes while taking manufacturing and assembly restrictions into account". The authors thank the German Research Foundation for the financial support.
