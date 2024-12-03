@@ -42,7 +42,7 @@ This (template) plugin consist of the following licenses:
 
 Just install it from the PlugIn Marketplace
 
-[CuraEngine Layered Infill Plugin](https://marketplace.ultimaker.com/app/cura/plugins/EmJay276/CuraEngineLayeredInfillPlugin)
+[CuraEngine Layered Infill Plugin](https://marketplace.ultimaker.com/app/cura/plugins/EmJay276/CuraEngineLayeredInfill)
 
 ### Building Manually
 
