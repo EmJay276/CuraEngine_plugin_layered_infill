@@ -30,11 +30,7 @@ This (template) plugin consist of the following licenses:
 
 ## Example
 
-<img src="/images/0_layer.png" width="200">
-<img src="/images/1_layer.png" width="200">
-<img src="/images/2_layer.png" width="200">
-<img src="/images/3_layer.png" width="200">
-<img src="/images/4_layer.png" width="200">
+<img src="/images/0_layer.png" width="200"> <img src="/images/1_layer.png" width="200"> <img src="/images/2_layer.png" width="200"> <img src="/images/3_layer.png" width="200"> <img src="/images/4_layer.png" width="200">
 
 ## Dependencies
 
