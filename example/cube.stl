@@ -1,0 +1,86 @@
+solid Uranium STLWriter Tue 03 Dec 2024 15:51:29
+facet normal 0.0 0.0 0.0
+  outer loop
+    vertex -10.0 -10.0 5.0
+    vertex -10.0 10.0 5.0
+    vertex -10.0 -10.0 -1.5308084995570108e-16
+  endloop
+endfacet
+facet normal 0.0 0.0 0.0
+  outer loop
+    vertex 10.0 -10.0 -1.5308084995570108e-16
+    vertex -10.0 -10.0 5.0
+    vertex -10.0 -10.0 -1.5308084995570108e-16
+  endloop
+endfacet
+facet normal 0.0 0.0 0.0
+  outer loop
+    vertex -10.0 -10.0 -1.5308084995570108e-16
+    vertex -10.0 10.0 5.0
+    vertex -10.0 10.0 1.5308084995570108e-16
+  endloop
+endfacet
+facet normal 0.0 0.0 0.0
+  outer loop
+    vertex -10.0 10.0 1.5308084995570108e-16
+    vertex 10.0 -10.0 -1.5308084995570108e-16
+    vertex -10.0 -10.0 -1.5308084995570108e-16
+  endloop
+endfacet
+facet normal 0.0 0.0 0.0
+  outer loop
+    vertex -10.0 -10.0 5.0
+    vertex 10.0 10.0 5.0
+    vertex -10.0 10.0 5.0
+  endloop
+endfacet
+facet normal 0.0 0.0 0.0
+  outer loop
+    vertex 10.0 -10.0 5.0
+    vertex -10.0 -10.0 5.0
+    vertex 10.0 -10.0 -1.5308084995570108e-16
+  endloop
+endfacet
+facet normal 0.0 0.0 0.0
+  outer loop
+    vertex 10.0 -10.0 5.0
+    vertex 10.0 10.0 5.0
+    vertex -10.0 -10.0 5.0
+  endloop
+endfacet
+facet normal 0.0 0.0 0.0
+  outer loop
+    vertex -10.0 10.0 5.0
+    vertex 10.0 10.0 5.0
+    vertex -10.0 10.0 1.5308084995570108e-16
+  endloop
+endfacet
+facet normal 0.0 0.0 0.0
+  outer loop
+    vertex 10.0 10.0 1.5308084995570108e-16
+    vertex 10.0 -10.0 -1.5308084995570108e-16
+    vertex -10.0 10.0 1.5308084995570108e-16
+  endloop
+endfacet
+facet normal 0.0 0.0 0.0
+  outer loop
+    vertex -10.0 10.0 1.5308084995570108e-16
+    vertex 10.0 10.0 5.0
+    vertex 10.0 10.0 1.5308084995570108e-16
+  endloop
+endfacet
+facet normal 0.0 0.0 0.0
+  outer loop
+    vertex 10.0 10.0 1.5308084995570108e-16
+    vertex 10.0 -10.0 5.0
+    vertex 10.0 -10.0 -1.5308084995570108e-16
+  endloop
+endfacet
+facet normal 0.0 0.0 0.0
+  outer loop
+    vertex 10.0 10.0 5.0
+    vertex 10.0 -10.0 5.0
+    vertex 10.0 10.0 1.5308084995570108e-16
+  endloop
+endfacet
+endsolid Uranium STLWriter Tue 03 Dec 2024 15:51:29
