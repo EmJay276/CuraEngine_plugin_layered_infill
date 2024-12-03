@@ -131,6 +131,7 @@ conaninfo.txt
 graph_info.json
 build/
 CMakeUserPresets.json
+*.zip
 
 include/plugin/cmdline.h
 CuraEngineLayeredInfill/plugin.json
